@@ -8,6 +8,14 @@ const Button = (props) => (
 )
 
 const Statistics = (props) => {
+  if (props.all < 1) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+  
   return (
     <div>
       <h1>Statistics</h1>
