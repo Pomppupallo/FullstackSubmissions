@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import './styles.css';
 
 const Button = (props) => (
   <button onClick={props.handleClick}>
     {props.text}
   </button>
 )
+
+const StatisticLine = (props) => {
+  return (
+    <tr>
+      <td>{props.text}</td>  
+      <td>{props.value}</td>
+    </tr>
+  )
+}
 
 const Statistics = (props) => {
   if (props.all < 1) {
@@ -15,17 +25,21 @@ const Statistics = (props) => {
       </div>
     )
   }
-  
+
   return (
-    <div>
-      <h1>Statistics</h1>
-      <p>good {props.good} </p>
-      <p>neutral {props.neutral} </p>
-      <p>bad {props.bad} </p>
-      <p>all {props.all} </p>
-      <p>average {props.average / props.all}</p>
-      <p>positive {100 * (props.good / props.all)}</p>
-    </div>
+    <>
+      <h2>statistics</h2>
+      <table>
+        <tbody>
+        <StatisticLine text='good' value={props.good} />
+        <StatisticLine text='neutral' value={props.neutral} />
+        <StatisticLine text='bad' value={props.bad} />
+        <StatisticLine text='all' value={props.all} />
+        <StatisticLine text='average' value={props.average / props.all} />
+        <StatisticLine text='positive' value={100 * (props.good / props.all) +" %"} />
+        </tbody>
+      </table>
+    </>
   )
 }
 
