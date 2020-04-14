@@ -15,7 +15,9 @@ const Part = ( {part} ) => {
   )
 }
 
+
 const Content = ( {parts}) => {
+
   return(
     <div>
         {parts.map(part =>
@@ -25,10 +27,14 @@ const Content = ( {parts}) => {
   )
 }
 const Course = ( {course} ) => {
+  const exercises = course.parts.map(part => part.exercises)
+  const total = exercises.reduce( (acc, cur) => acc + cur, 0)
+  console.log(total)
   return (
     <div>
       <Header header={course.name} />
       <Content parts={course.parts} />
+      <p>total of {total} exercises</p>
     </div>
   )
 }
