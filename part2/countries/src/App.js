@@ -22,7 +22,9 @@ const App = () => {
   return (
    <div>
      <FindCountries handleSearchChange={handleSearchChange} newSearch={newSearch}/>
-     <DisplayCountries countries={countries} newSearch={newSearch}/>
+     <DisplayCountries countries={countries} newSearch={newSearch}
+      handleClick={(s) => setNewSearch(s)}
+     />
    </div>
   );
 }

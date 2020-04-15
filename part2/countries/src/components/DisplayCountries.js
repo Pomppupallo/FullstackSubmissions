@@ -17,29 +17,23 @@ const OneCountry = ( {country} ) => {
     )
 }
 
-const Country = ( {name} ) => {
-    return(
-        <div>
-            <p>{name}</p>
-        </div>
-    )
-}
-
-const DisplayCountries = ( {countries, newSearch} ) => {
+const DisplayCountries = ( {countries, newSearch, handleClick} ) => {
     const filter = newSearch.toLowerCase()
     const toShow = countries.filter(country => country.name.toLowerCase().includes(filter))
 
     if (toShow.length > 10) {
         return(
             <div>
-                <p>Too many matches, specify another filter</p>
+                <p>{`Too many matches (${toShow.length}), specify another filter`}</p>
             </div>
         ) 
     } else if (toShow.length <= 10 && toShow.length !== 1) {
         return(
             <div>
                 {toShow.map(country => 
-                <Country key={country.name} name={country.name} />
+                    <p key={country.name}> {country.name} 
+                    <button onClick={() => handleClick(country.name)}>show</button>
+                    </p>
                 )}
             </div>
         )
