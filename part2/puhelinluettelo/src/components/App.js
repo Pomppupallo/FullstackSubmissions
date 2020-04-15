@@ -1,5 +1,42 @@
 import React, { useState } from 'react'
 
+const PersonForm = ( {addPerson, newName, handleNameChange, newNumber, handleNumberChange}) => {
+    return(
+        <div>
+        <form onSubmit={addPerson}>
+        <div>
+          <p>name: 
+          <input 
+            value={newName}
+            onChange={handleNameChange}
+          />
+          </p>
+          <p>number:
+          <input
+            value={newNumber}
+            onChange={handleNumberChange}
+           />
+           </p>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      </div>
+    )
+}
+
+const Filter = ( {newFilter, handleFilterChange}) => {
+    return(
+        <p>filter shown with
+          <input
+          value={newFilter}
+          onChange={handleFilterChange}
+          />
+      </p>
+    )
+}
+
 const Person = ( {person} ) => {
     return(
         <div>
@@ -69,33 +106,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <p>filter shown with
-          <input
-          value={newFilter}
-          onChange={handleFilterChange}
-          />
-      </p>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          <p>name: 
-          <input 
-            value={newName}
-            onChange={handleNameChange}
-          />
-          </p>
-          <p>number:
-          <input
-            value={newNumber}
-            onChange={handleNumberChange}
-           />
-           </p>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Filter 
+        newFilter={newFilter}
+        handleFilterChange={handleFilterChange}
+      />
+      <h3>Add a new</h3>
+      <PersonForm
+        addPerson={addPerson} 
+        newName={newName} 
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+        handleNameChange={handleNameChange}
+      />
+      <h3>Numbers</h3>
       <Display persons={persons} filter={newFilter} />
     </div>
   )
