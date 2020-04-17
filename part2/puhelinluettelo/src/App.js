@@ -38,22 +38,24 @@ const Filter = ( {newFilter, handleFilterChange}) => {
     )
 }
 
-const Person = ( {person} ) => {
+const Person = ( {person, deletePerson} ) => {
     return(
         <div>
-            <p>{person.name} {person.number}</p>
+            <p>{person.name} {person.number}
+            <button onClick={() => deletePerson(person.id)}> delete</button>
+            </p>
         </div>
     )
 }
 
-const Display = ( {persons, filter} ) => {
+const Display = ( {persons, filter, deletePerson} ) => {
     const search = filter.toLowerCase()
     const filteredResults = persons.filter(person => person.name.toLowerCase().includes(search))
 
     return(
         <div>
         {filteredResults.map(person =>
-            <Person key={person.name} person={person} />
+            <Person key={person.name} person={person} deletePerson={deletePerson}/>
         )}
         </div>
     )
@@ -70,6 +72,12 @@ const App = () => {
       .getAll()
       .then(personsData => setPersons(personsData))
   }, [])
+
+  const deletePerson = (id) => {
+    personService
+      .remove(id)
+      .then(responseData => setPersons(persons.filter(person => person.id !== id)))
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -108,14 +116,14 @@ const App = () => {
       />
       <h3>Add a new</h3>
       <PersonForm
-        addPerson={addPerson} 
+        addPerson={addPerson}
         newName={newName} 
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
         handleNameChange={handleNameChange}
       />
       <h3>Numbers</h3>
-      <Display persons={persons} filter={newFilter} />
+      <Display persons={persons} filter={newFilter} deletePerson={deletePerson} />
     </div>
   )
 
