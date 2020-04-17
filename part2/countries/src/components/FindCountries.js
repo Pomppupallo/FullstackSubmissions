@@ -4,7 +4,7 @@ const FindCountries = ( {newSearch, handleSearchChange}) => {
     
     return(
         <div>
-            <p>find countries:
+            <p>Find countries:
                 <input
                 value={newSearch}
                 onChange={handleSearchChange}
