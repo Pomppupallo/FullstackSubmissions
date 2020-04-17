@@ -29,6 +29,53 @@ const PersonForm = ({
   );
 };
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  if (message.print === '') {
+    return null
+  }
+
+  const ok = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderColor: 'green',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  const error = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderColor: 'red',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  let style = ok
+  
+
+  if (!message.notError) {
+    style = ok
+  } else {
+    style = error
+  }
+
+  return (
+    <div style={style}>
+      {message.print}
+    </div>
+  )
+}
+
 const Filter = ({ newFilter, handleFilterChange }) => {
   return (
     <p>
@@ -42,7 +89,7 @@ const Person = ({ person, deletePerson }) => {
   return (
     <div>
       <p>
-        {person.name} {person.number}
+        {person.name} {person.number} id {person.id}
         <button onClick={() => deletePerson(person.id)}> delete</button>
       </p>
     </div>
@@ -69,22 +116,34 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
+  const [newMessage, setNewMessage] = useState({print: '', error: false});
 
   useEffect(() => {
     personService.getAll().then((personsData) => setPersons(personsData));
   }, []);
 
   const deletePerson = (id) => {
+    console.log(id)
     const person = persons.find((person) => person.id === id);
     if (window.confirm(`Poistetaanko ${person.name} luettelosta?`)) {
       personService
         .remove(id)
-        .then((responseData) =>
+        .then((responseData) => {
           setPersons(persons.filter((person) => person.id !== id))
-        );
-    }
+        })
+        .catch(error => {
+          const messageObject= {
+            print: `${person.name} was already deleted from server `,
+            error: false
+          }
+          setNewMessage(messageObject)
+          setPersons(persons.filter((person) => person.id !== id))
+          setTimeout(() => {
+            setNewMessage({print:'', error: false})
+          }, 2000)
+        })
     return null;
-  };
+  }}
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -94,32 +153,30 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newNumber,
+        id: persons.length + 1
       };
-      personService.create(personObject).then((responseData) => {
-        console.log(responseData);
-      });
+      personService.create(personObject).then((responseData) => {});
       setPersons(persons.concat(personObject));
       setNewName("");
       setNewNumber("");
-    } else {
-      if (
-        window.confirm(
-          `${newName} is already added to phonebook, replace the old number with a new one?`
-        )
-      ) {
+      setNewMessage({print: `${personObject.name} added successfully `, style: 'ok'})
+      setTimeout(() => setNewMessage(null), 2000)
+    } 
+    else {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const person = persons.find((person) => person.name === newName);
         const id = person.id;
         const personObject = {
           name: newName,
           number: newNumber,
+          id: id
         };
         personService.update(id, personObject).then((responseData) => {
-          console.log(responseData);
-          setPersons(
-            persons.map((person) => (person.id !== id ? person : responseData))
-          );
+          setPersons(persons.map((person) => (person.id !== id ? person : responseData)));
           setNewName("");
           setNewNumber("");
+          setNewMessage({print: `${personObject.name} number is now successfully changed `, style: 'ok'})
+          setTimeout(() => setNewMessage(null), 2000)
         });
       }
     }
@@ -131,6 +188,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={newMessage} />
       <h2>Phonebook</h2>
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
