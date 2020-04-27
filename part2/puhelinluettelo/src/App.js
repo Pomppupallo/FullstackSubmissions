@@ -37,7 +37,7 @@ const Notification = ({ message }) => {
   if (message.print === '') {
     return null
   }
-
+  
   const ok = {
     color: 'green',
     background: 'lightgrey',
@@ -61,13 +61,10 @@ const Notification = ({ message }) => {
   }
 
   let style = ok
-  
 
-  if (!message.notError) {
-    style = ok
-  } else {
+  if (message.error) {
     style = error
-  }
+  } 
 
   return (
     <div style={style}>
@@ -85,7 +82,7 @@ const Filter = ({ newFilter, handleFilterChange }) => {
   );
 };
 
-const Person = ({ person, deletePerson }) => {
+const Person = ({ person, deletePerson}) => {
   return (
     <div>
       <p>
@@ -123,59 +120,51 @@ const App = () => {
   }, []);
 
   const deletePerson = (id) => {
-    console.log(id)
     const person = persons.find((person) => person.id === id);
     if (window.confirm(`Poistetaanko ${person.name} luettelosta?`)) {
       personService
         .remove(id)
         .then((responseData) => {
+          setNewMessage({print: `${responseData.name} was deleted from server `, error: false})
           setPersons(persons.filter((person) => person.id !== id))
+          setTimeout(() => setNewMessage(null), 2000)
         })
         .catch(error => {
-          const messageObject= {
-            print: `${person.name} was already deleted from server `,
-            error: false
-          }
-          setNewMessage(messageObject)
+          setNewMessage({print: `${person.name} was already deleted from server `, error: true})
           setPersons(persons.filter((person) => person.id !== id))
-          setTimeout(() => {
-            setNewMessage({print:'', error: false})
-          }, 2000)
+          setTimeout(() => setNewMessage(null), 2000)
         })
     return null;
   }}
 
   const addPerson = (event) => {
     event.preventDefault();
-    const names = persons.map((person) => person.name);
+    const names = persons.map(person => person.name);
 
     if (!names.includes(newName)) {
       const personObject = {
         name: newName,
-        number: newNumber,
-        id: persons.length + 1
+        number: newNumber
       };
-      personService.create(personObject).then((responseData) => {});
-      setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewNumber("");
-      setNewMessage({print: `${personObject.name} added successfully `, style: 'ok'})
-      setTimeout(() => setNewMessage(null), 2000)
-    } 
-    else {
+      personService.create(personObject).then((responseData) => {
+        setPersons(persons.concat(responseData));
+        setNewName("");
+        setNewNumber("");
+        setNewMessage({print: `${personObject.name} added successfully `, style: 'ok'})
+        setTimeout(() => setNewMessage(null), 2000)
+      })
+    } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        const person = persons.find((person) => person.name === newName);
-        const id = person.id;
-        const personObject = {
-          name: newName,
-          number: newNumber,
-          id: id
-        };
-        personService.update(id, personObject).then((responseData) => {
-          setPersons(persons.map((person) => (person.id !== id ? person : responseData)));
+        const person = persons.find(person => person.name === newName);
+        personService.update({
+          ...person,
+          number: newNumber
+        }).then((responseData) => {
+          setPersons(persons.map(person => person.name === newName ? responseData : person))
+          //setPersons(persons.map((person) => (person.id !== responseData.id ? person : responseData)));
           setNewName("");
           setNewNumber("");
-          setNewMessage({print: `${personObject.name} number is now successfully changed `, style: 'ok'})
+          setNewMessage({print: `${person.name} number is now successfully changed `, style: 'ok'})
           setTimeout(() => setNewMessage(null), 2000)
         });
       }
