@@ -117,25 +117,20 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((personsData) => setPersons(personsData));
-  }, []);
+  }, [setPersons]);
 
   const deletePerson = (id) => {
-    const person = persons.find((person) => person.id === id);
-    if (window.confirm(`Poistetaanko ${person.name} luettelosta?`)) {
-      personService
-        .remove(id)
-        .then((responseData) => {
-          setNewMessage({print: `${responseData.name} was deleted from server `, error: false})
-          setPersons(persons.filter((person) => person.id !== id))
-          setTimeout(() => setNewMessage(null), 2000)
-        })
-        .catch(error => {
-          setNewMessage({print: `${person.name} was already deleted from server `, error: true})
-          setPersons(persons.filter((person) => person.id !== id))
-          setTimeout(() => setNewMessage(null), 2000)
-        })
-    return null;
-  }}
+    //const person = persons.find((person) => person.id === id);
+    personService
+      .remove(id)
+      .then((responseData) => {
+        console.log(`removed ${responseData.name}`);
+        setNewMessage({print: `${responseData.name} was removed succesfully `, style: 'ok'})
+        setTimeout(() => setNewMessage(null), 2000)
+        setPersons(persons.filter((person) => person.id !== id))
+      })
+  }
+  
 
   const addPerson = (event) => {
     event.preventDefault();
