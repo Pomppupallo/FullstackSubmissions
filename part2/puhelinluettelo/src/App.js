@@ -86,7 +86,7 @@ const Person = ({ person, deletePerson}) => {
   return (
     <div>
       <p>
-        {person.name} {person.number} id {person.id}
+        Name: {person.name} -- Number: {person.number}
         <button onClick={() => deletePerson(person.id)}> delete</button>
       </p>
     </div>
@@ -102,7 +102,7 @@ const Display = ({ persons, filter, deletePerson }) => {
   return (
     <div>
       {filteredResults.map((person) => (
-        <Person key={person.name} person={person} deletePerson={deletePerson} />
+        <Person key={person.id} person={person} deletePerson={deletePerson} />
       ))}
     </div>
   );
@@ -117,20 +117,20 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((personsData) => setPersons(personsData));
-  }, [setPersons]);
+  }, []);
 
   const deletePerson = (id) => {
-    //const person = persons.find((person) => person.id === id);
     personService
       .remove(id)
       .then((responseData) => {
-        console.log(`removed ${responseData.name}`);
         setNewMessage({print: `${responseData.name} was removed succesfully `, style: 'ok'})
         setTimeout(() => setNewMessage(null), 2000)
         setPersons(persons.filter((person) => person.id !== id))
       })
+      .catch((error) => {
+        console.log(error);
+      }
   }
-  
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -150,18 +150,19 @@ const App = () => {
       })
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        const person = persons.find(person => person.name === newName);
-        personService.update({
+        let person = persons.find(person => person.name === newName)
+        person = {
           ...person,
           number: newNumber
-        }).then((responseData) => {
+        }
+        personService.update(person).then((responseData) => {
+          console.log(`succesfully changed ${responseData.name}`);
           setPersons(persons.map(person => person.name === newName ? responseData : person))
-          //setPersons(persons.map((person) => (person.id !== responseData.id ? person : responseData)));
           setNewName("");
           setNewNumber("");
-          setNewMessage({print: `${person.name} number is now successfully changed `, style: 'ok'})
+          setNewMessage({print: `${responseData.name} changed successfully `, style: 'ok'})
           setTimeout(() => setNewMessage(null), 2000)
-        });
+        })
       }
     }
   };
