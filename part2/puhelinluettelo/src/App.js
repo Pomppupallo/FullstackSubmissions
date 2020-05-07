@@ -62,7 +62,7 @@ const Notification = ({ message }) => {
 
   let style = ok
 
-  if (message.error) {
+  if (message.error === true) {
     style = error
   } 
 
@@ -86,7 +86,7 @@ const Person = ({ person, deletePerson}) => {
   return (
     <div>
       <p>
-        Name: {person.name} -- Number: {person.number}
+        {person.name} -- Number: {person.number}
         <button onClick={() => deletePerson(person.id)}> delete</button>
       </p>
     </div>
@@ -123,13 +123,13 @@ const App = () => {
     personService
       .remove(id)
       .then((responseData) => {
-        setNewMessage({print: `${responseData.name} was removed succesfully `, style: 'ok'})
+        setNewMessage({print: `${responseData.name} was removed succesfully `, error: false})
         setTimeout(() => setNewMessage(null), 2000)
         setPersons(persons.filter((person) => person.id !== id))
       })
       .catch((error) => {
         console.log(error);
-      }
+      })
   }
 
   const addPerson = (event) => {
@@ -145,7 +145,12 @@ const App = () => {
         setPersons(persons.concat(responseData));
         setNewName("");
         setNewNumber("");
-        setNewMessage({print: `${personObject.name} added successfully `, style: 'ok'})
+        setNewMessage({print: `${personObject.name} added successfully `, error: false})
+        setTimeout(() => setNewMessage(null), 2000)
+      })
+      .catch(error => {
+        const message = error.response.data
+        setNewMessage({print: message.error, error: true})
         setTimeout(() => setNewMessage(null), 2000)
       })
     } else {
@@ -156,11 +161,10 @@ const App = () => {
           number: newNumber
         }
         personService.update(person).then((responseData) => {
-          console.log(`succesfully changed ${responseData.name}`);
           setPersons(persons.map(person => person.name === newName ? responseData : person))
           setNewName("");
           setNewNumber("");
-          setNewMessage({print: `${responseData.name} changed successfully `, style: 'ok'})
+          setNewMessage({print: `${responseData.name} changed successfully `, error: false})
           setTimeout(() => setNewMessage(null), 2000)
         })
       }

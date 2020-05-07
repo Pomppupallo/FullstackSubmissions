@@ -1,36 +1,10 @@
-const express = require("express");
-const app = express();
+const app = require('./app')
+const http = require('http')
+const config = require('./utils/config')
+const logger = require('./utils/logger')
 
-app.use(express.json());
+const server = http.createServer(app)
 
-let notes = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-523523",
-    id: 2,
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
-  },
-  {
-    name: "Toni Virtanen",
-    number: "040-1234567",
-    id: 4
-  }
-];
-
-app.get("/api/persons/", (req, res) => {
-  res.json(notes);
-});
-
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+server.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`)
+})
