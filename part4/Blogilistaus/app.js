@@ -1,18 +1,24 @@
 const express = require('express')
+require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const blogRouter = require('./controllers/blogs')
+const config = require('./utils/config')
+const logger = require('./utils/logger')
+const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
 
-const mongoUrl = 'mongodb+srv://blogger:blogger@bloggertietokanta-tojah.mongodb.net/blog?retryWrites=true&w=majority'
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true}).then(response => {
-    console.log("mongoDB ok")
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true}).then(response => {
+    logger.info("mongoDB ok")
 }).catch(error => {
-    console.log(error)
+    logger.error(error)
 })
 
 app.use(cors())
 app.use(express.json())
+app.use(middleware.requestLogger)
 app.use('/api/blogs', blogRouter)
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app

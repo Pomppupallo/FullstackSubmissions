@@ -8,9 +8,7 @@ const totalLikes = (blogs) => {
     const reducer = (sum, item) => {
         return sum + item
     }
-
     const likes = blogs.map(blog => blog.likes);
-
     return likes.reduce(reducer, 0)
 }
 
@@ -69,7 +67,15 @@ const mostLikes = (blogs) => {
     if (blogs.length < 1) {
         return 
     }
+    if (blogs.length === 1) {
+        const returnObject = {
+            author: blogs[0].author,
+            likes: blogs[0].likes
+        }
+        return returnObject
+    }
     
+    //sort blogs by author
     const sorted = _.sortBy(blogs, blogs.author)
 
     let index = 0;
@@ -82,13 +88,13 @@ const mostLikes = (blogs) => {
         author = sorted[i].author
         if (author === previusAuthor) {
             currentLikes += likes;
-            if (currentLikes > maxLikes) {
-                maxLikes = currentLikes;
-                index = i;
-            }
         } else {
             previusAuthor = author;
             currentLikes = likes;
+        }
+        if (currentLikes > maxLikes) {
+            maxLikes = currentLikes;
+            index = i; 
         }
     }
 
@@ -96,6 +102,7 @@ const mostLikes = (blogs) => {
         author: sorted[index].author,
         likes: maxLikes
     }
+
 
     return returnObject
 

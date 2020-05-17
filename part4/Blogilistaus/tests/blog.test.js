@@ -72,13 +72,23 @@ describe('Authors', () => {
         expect(result).toEqual(correct)
     })
 
-    test('Most liked blogger', () => {
+    test('Most liked blogger from big list', () => {
         const correct = {
           author: 'Edsger W. Dijkstra',
           likes: 17
         }
 
         const result = listHelper.mostLikes(blogs)
+        expect(result).toEqual(correct)
+    })
+
+    test('Most liked blogger from one blog returns correcly', () => {
+        const correct = {
+            author: 'Edsger W. Dijkstra',
+            likes: 5
+        }
+
+        const result = listHelper.mostLikes(listWithOneBlog)
         expect(result).toEqual(correct)
     })
 })
