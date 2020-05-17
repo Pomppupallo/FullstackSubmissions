@@ -39,7 +39,7 @@ test('a valid blog can be added', async () => {
     }
 
     await api
-    .post('/api/blogs')
+    .post('/api/blogs/')
     .send(newBlog)
     .expect(200)
     .expect('Content-Type', /application\/json/)
@@ -82,6 +82,16 @@ test('posting blog without title and url returns status 400', async () => {
     .post('/api/blogs')
     .send(newBlog)
     .expect(400)
+})
+
+test('removing one blog', async () => {
+    await api
+    .delete('/api/blogs/5a422a851b54a676234d17f7')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+    const notesAtEnd = await helper.blogsInDb()
+    expect(notesAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 })
 
 
