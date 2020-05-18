@@ -1,0 +1,10 @@
+post http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvbmkiLCJpZCI6IjVlYzI3MDg3OTkxODk2MDkzMGJhY2NkZSIsImlhdCI6MTU4OTgwMTE3M30.9FYXe0NJlW6aTS5Na2rIP-YNW6NycNNv9jUW5kmXnGs
+
+{
+    "title": "Mahtavaa menoa",
+    "author": "Joka Mies",
+    "url": "www.netti.fi",
+    "likes": 1
+}
