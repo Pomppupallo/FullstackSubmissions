@@ -4,8 +4,10 @@ const bcrypt = require('bcrypt')
 const config = require('./config.js');
 
 const tokenExtractor = (request, response, next) => {
-  let authorization = request.get('authorization')
-  request.token = authorization.substring(7)
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    request.token = authorization.substring(7)
+  }
   next()
 }
 

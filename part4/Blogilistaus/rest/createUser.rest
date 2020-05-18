@@ -1,0 +1,7 @@
+post http://localhost:3003/api/users
+
+{
+    "username": "Toni",
+    "name": "Toni Virtanen",
+    "password": "123456"
+}

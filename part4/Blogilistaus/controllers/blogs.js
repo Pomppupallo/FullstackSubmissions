@@ -12,9 +12,12 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response) => {
+  if (!request.token) {
+    response.status(401).send({ error: 'Token not available'})
+  }
+  
   const body = request.body
   const token = request.token
-  console.log(token)
 
   const decodedToken = jwt.verify(token, config.SECRET)
   if (!token || !decodedToken.id) {
@@ -37,8 +40,21 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-  const oneToRemove = await Blog.findByIdAndRemove(request.params.id)
-  response.json(oneToRemove)
+  if (!request.token) {
+    response.status(401).send({ error: 'Token not available'})
+  }
+  const decodedToken = jwt.verify(request.token, config.SECRET)
+  const tokenUser = await User.findById(decodedToken.id)
+
+  const blog = await Blog.findById(request.params.id)
+  const user = await User.findById(blog.user)
+  console.log(blog.user.id.toString())
+  if (user.id.toString() === tokenUser._id.toString()){
+    const oneToRemove = await Blog.findByIdAndRemove(request.params.id)
+    response.json(oneToRemove)
+  } else {
+    response.status(404).send({ error: 'Not authorized to delete this blog'})
+  }
 })
 
 blogRouter.put('/:id', async (request, response) => {
