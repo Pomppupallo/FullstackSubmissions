@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
-  const [viewAll, setView] = useState(false);
+  const [viewAll, setView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -31,15 +31,15 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
   }
 
   const toggleView = () => {
-    setView(!viewAll);
-  };
+    setView(!viewAll)
+  }
 
   if (!viewAll) {
     return (
       <div style = {blogStyle}>
         {blog.title} {blog.author} <button onClick={toggleView}>view</button>
       </div>
-    );
+    )
   }
 
   if (viewAll && blog.user.username === currentUser) {
@@ -51,7 +51,7 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
         <p>{blog.user.name}</p>
         <button onClick={() => removeBlog(blog.id, blog.title)}>REMOVE BLOG</button>
       </div>
-    );
+    )
   }
 
   return (
@@ -61,7 +61,7 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
       <p>likes {blog.likes} <button onClick={updateBlog}>add like</button> </p>
       <p>{blog.user.name}</p>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
