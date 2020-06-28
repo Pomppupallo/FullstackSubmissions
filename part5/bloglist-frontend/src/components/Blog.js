@@ -12,9 +12,6 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
     lineHeight: 0.5
   }
 
-  console.log('Blogin käyttäjä --->', blog.user.username)
-  console.log('Nykyinen käyttäjä --->', currentUser)
-
   const updateBlog = () => {
 
     const newObject= {
@@ -36,7 +33,7 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
 
   if (!viewAll) {
     return (
-      <div style = {blogStyle}>
+      <div style = {blogStyle} className='blogViewTitleAuthor'>
         {blog.title} {blog.author} <button onClick={toggleView}>view</button>
       </div>
     )
@@ -44,7 +41,7 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
 
   if (viewAll && blog.user.username === currentUser) {
     return (
-      <div style = {blogStyle}>
+      <div style = {blogStyle} className='blogViewAllUser'>
         <p>{blog.title} {blog.author} <button onClick={toggleView}>hide</button> </p>
         <p>{blog.url} </p>
         <p>likes {blog.likes} <button onClick={updateBlog}>add like</button> </p>
@@ -55,7 +52,7 @@ const Blog = ({ blog, changeBlog, removeBlog, currentUser }) => {
   }
 
   return (
-    <div style = {blogStyle}>
+    <div style = {blogStyle} className='blogViewAllNotUser'>
       <p>{blog.title} {blog.author} <button onClick={toggleView}>hide</button> </p>
       <p>{blog.url} </p>
       <p>likes {blog.likes} <button onClick={updateBlog}>add like</button> </p>
