@@ -2,7 +2,7 @@ describe('Blog app', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3003/api/testing/reset')
         cy.createUser({ username: 'testi', password:'123456', name: 'Testi Tyyppi' })
-        cy.createUser({ username: 'testi2', password:'123456', name: 'Testi Tyyppi 2'})
+        cy.createUser({ username: 'testi2', password:'123456', name: 'Testi Tyyppi 2' })
         cy.visit('http://localhost:3000')
     })
 
