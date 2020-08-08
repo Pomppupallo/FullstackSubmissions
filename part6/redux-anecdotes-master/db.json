@@ -1,34 +1,29 @@
 {
   "anecdotes": [
     {
-      "content": "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
-      "id": "69581",
-      "votes": 9
-    },
-    {
       "content": "taas rikki",
-      "votes": 9,
+      "votes": 38,
       "id": "Br07-1J"
     },
     {
-      "content": "Nyt pitäisi toimia",
-      "votes": 102,
-      "id": "-QmumZp"
-    },
-    {
       "content": "Nyt ei pelaa oikein mikään",
-      "votes": 1,
+      "votes": 22,
       "id": "IGvah1S"
     },
     {
       "content": "Toimiiko tämäjään",
-      "votes": 1,
+      "votes": 20,
       "id": "FPQ36Ao"
     },
     {
-      "content": "Tämäkin ehkä pelaa",
-      "votes": 1,
-      "id": "5oHW7HY"
+      "content": "Lisäys toimii",
+      "votes": 21,
+      "id": "h9Zq0ab"
+    },
+    {
+      "content": "Connectec component workin?",
+      "votes": 20,
+      "id": "3fYmilY"
     }
   ]
 }

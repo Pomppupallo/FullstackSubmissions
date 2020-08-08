@@ -4,7 +4,7 @@ import { addVote, deleteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const newVote = (dispatch, anecdote) => {
-    dispatch(setNotification(`you voted '${anecdote.content}'`, 10))
+    dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
     dispatch(addVote(anecdote))
 }
 
@@ -33,8 +33,7 @@ const AnecdoteList = () => {
     } 
 
     filteredAnecdotes.sort((a, b) => (a.votes < b.votes) ? 1 : -1);
-    console.log('filter word: ', filter)
-    console.log('filtered results: ', filteredAnecdotes)
+
     return(
         <div>
             {filteredAnecdotes.map(anecdote =>
