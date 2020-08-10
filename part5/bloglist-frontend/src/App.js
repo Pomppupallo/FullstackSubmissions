@@ -6,13 +6,15 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useDispatch } from 'react-redux'
+import { setMessage, clearMessage } from './reducers/notificationReducer'
 
 const App = () => {
+    const dispatch = useDispatch()
     const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
-    const [message, setMessage] = useState('')
     const blogFormRef = React.createRef()
 
     useEffect(() => {
@@ -42,9 +44,9 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch (exception) {
-            setMessage('wrong username or password')
+            dispatch(setMessage('wrong username or password'))
             setTimeout(() => {
-                setMessage(null)
+                dispatch(clearMessage())
             }, 3000)
         }
     }
@@ -55,14 +57,14 @@ const App = () => {
             blogFormRef.current.toggleVisibility()
             newBlog.user = user
             setBlogs(blogs.concat(newBlog))
-            setMessage(`a new blog "${newBlog.title}" added by ${user.name}`)
+            dispatch(setMessage(`a new blog "${newBlog.title}" added by ${user.name}`))
             setTimeout(() => {
-                setMessage(null)
+                dispatch(clearMessage())
             }, 3000)
         } catch (exception) {
-            setMessage('Some inputs are missing - Try again')
+            dispatch(setMessage('Some inputs are missing - Try again'))
             setTimeout(() => {
-                setMessage(null)
+                dispatch(clearMessage())
             }, 3000)
         }
     }
@@ -76,14 +78,14 @@ const App = () => {
                 user: userB.user,
             }
             setBlogs(blogs.map((blog) => (blog.id === newBlog.id ? newBlog : blog)))
-            setMessage(`a blog "${newBlog.title}" was liked by ${user.name}`)
+            dispatch(setMessage(`a blog "${newBlog.title}" was liked by ${user.name}`))
             setTimeout(() => {
-                setMessage(null)
+                dispatch(clearMessage())
             }, 3000)
         } catch (exception) {
-            setMessage(`${exception.error}`)
+            dispatch(setMessage(`${exception.error}`))
             setTimeout(() => {
-                setMessage(null)
+                dispatch(clearMessage())
             }, 3000)
         }
     }
@@ -93,14 +95,14 @@ const App = () => {
             try {
                 const newBlog = await blogService.remove(id)
                 setBlogs(blogs.filter((blog) => blog.id !== newBlog.id))
-                setMessage(`a blog "${newBlog.title}" was removed ${user.name}`)
+                dispatch(setMessage(`a blog "${newBlog.title}" was removed ${user.name}`))
                 setTimeout(() => {
-                    setMessage(null)
+                    dispatch(clearMessage())
                 }, 3000)
             } catch (exception) {
-                setMessage(`${exception.error}`)
+                dispatch(setMessage(`${exception.error}`))
                 setTimeout(() => {
-                    setMessage(null)
+                    dispatch(clearMessage())
                 }, 3000)
             }
         }
@@ -154,7 +156,7 @@ const App = () => {
     return (
         <div>
             <h1>Blogs</h1>
-            <Notification message={message} />
+            <Notification  />
             {user === null ? (
                 loginForm()
             ) : (
